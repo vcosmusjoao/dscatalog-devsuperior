@@ -1,5 +1,6 @@
 package com.devsuperior.dscatalog.controllers.exceptions;
 
+import com.devsuperior.dscatalog.services.excepetion.DatabaseException;
 import com.devsuperior.dscatalog.services.excepetion.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,5 +22,18 @@ public class ControllerExceptionHandler {
         err.setMessage(e.getMessage());
         err.setPath(request.getRequestURI());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
+    }
+
+
+
+    @ExceptionHandler(DatabaseException.class)
+    public ResponseEntity<StandardError> databaseIntegrity(DatabaseException e , HttpServletRequest request){
+        StandardError err = new StandardError();
+        err.setTimeStamp(Instant.now());
+        err.setStatus(HttpStatus.BAD_REQUEST.value());
+        err.setError("Database Exception");
+        err.setMessage(e.getMessage());
+        err.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
 }
