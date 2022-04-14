@@ -8,12 +8,13 @@ import com.devsuperior.dscatalog.services.excepetion.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 public class CategoryService {
@@ -23,13 +24,11 @@ public class CategoryService {
 
     //LISTAR TODOS OS PRODUTOS
     @Transactional(readOnly = true)
-    public List<CategoryDTO> findAll(){
-        List<Category> list =  categoryRepository.findAll();
-        List<CategoryDTO> listDTO = list
-                .stream()
-                .map(x -> new CategoryDTO(x))
-                .collect(Collectors.toList());
-        return listDTO;
+    public Page<CategoryDTO> findAllPaged(PageRequest pageRequest){
+        Page<Category> page =  categoryRepository.findAll(pageRequest);
+        Page<CategoryDTO> pageDTO = page
+                .map(x -> new CategoryDTO(x));
+        return pageDTO;
     }
 
     @Transactional(readOnly = true)
@@ -73,4 +72,6 @@ public class CategoryService {
             throw new DatabaseException("Violação de Integridade");
         }
     }
+
+
 }
