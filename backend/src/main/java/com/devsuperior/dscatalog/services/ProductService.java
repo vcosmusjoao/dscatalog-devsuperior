@@ -1,8 +1,11 @@
 package com.devsuperior.dscatalog.services;
 
+import com.devsuperior.dscatalog.dto.CategoryDTO;
 import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.dto.ProductDTO;
+import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.entities.Product;
+import com.devsuperior.dscatalog.repositories.CategoryRepository;
 import com.devsuperior.dscatalog.repositories.ProductRepository;
 import com.devsuperior.dscatalog.services.excepetion.DatabaseException;
 import com.devsuperior.dscatalog.services.excepetion.ResourceNotFoundException;
@@ -21,6 +24,9 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     //LISTAR TODOS OS PRODUTOS
     @Transactional(readOnly = true)
@@ -44,28 +50,19 @@ public class ProductService {
 
     @Transactional
     public ProductDTO add (ProductDTO productDTO){
-        Product p = new Product();
-        p.setName(productDTO.getName());
-        p.setDate(productDTO.getDate());
-        p.setDescription(productDTO.getDescription());
-        p.setImgUrl(productDTO.getImgUrl());
-        p.setPrice(productDTO.getPrice());
-        p = productRepository.save(p);
-        return new ProductDTO(p);
+        Product productEntity = new Product();
+        copyDTOtoEntity(productDTO,productEntity);
+        productEntity= productRepository.save(productEntity);
+        return new ProductDTO(productEntity);
     }
 
     @Transactional
     public ProductDTO update(Long id, ProductDTO productDTO) {
         try{
-            Product entity = productRepository.getOne(id);
-            entity.setName(productDTO.getName());
-            entity.setName(productDTO.getName());
-            entity.setDate(productDTO.getDate());
-            entity.setDescription(productDTO.getDescription());
-            entity.setImgUrl(productDTO.getImgUrl());
-            entity.setPrice(productDTO.getPrice());
-            entity = productRepository.save(entity);
-            return new ProductDTO(entity);
+            Product productEntity = productRepository.getOne(id);
+            copyDTOtoEntity(productDTO,productEntity);
+            productEntity = productRepository.save(productEntity);
+            return new ProductDTO(productEntity);
         }catch(EntityNotFoundException e) {
             throw new ResourceNotFoundException("Id Não Encontrado "+id);
         }
@@ -79,6 +76,19 @@ public class ProductService {
             throw new ResourceNotFoundException(("Id não encontrado ")+ id);
         }catch(DataIntegrityViolationException e){//caso eu apague uma categoria que iria comprometer a integridade do banco, por exemplo, eu apagar uma categoria que tem varios produtos dependendo dessa categoria
             throw new DatabaseException("Violação de Integridade");
+        }
+    }
+
+    private void copyDTOtoEntity(ProductDTO dto, Product entity){
+        entity.setName(dto.getName());
+        entity.setDescription(dto.getDescription());
+        entity.setDate(dto.getDate());
+        entity.setImgUrl(dto.getImgUrl());
+        entity.setPrice(dto.getPrice());
+        entity.getCategories().clear();
+        for(CategoryDTO categoryDTO :dto.getCategories()){
+            Category category = categoryRepository.getOne(categoryDTO.getId());
+            entity.getCategories().add(category);
         }
     }
 }
