@@ -41,4 +41,12 @@ public class Product implements Serializable {
 
     private Set<Category> categories = new HashSet<>();
 
+    public Product(Long id, String name, String description, Double price, String imgUrl, Instant date) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.imgUrl = imgUrl;
+        this.date = date;
+    }
 }
