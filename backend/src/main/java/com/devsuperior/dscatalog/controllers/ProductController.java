@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -32,7 +33,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductDTO> add (@RequestBody  ProductDTO productDTO){
+    public ResponseEntity<ProductDTO> add (@Valid @RequestBody  ProductDTO productDTO){
         productDTO =  productService.add(productDTO);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").
                 buildAndExpand(productDTO.getId()).toUri();
@@ -40,7 +41,7 @@ public class ProductController {
     }
 
     @PutMapping(value="/{id}")
-    public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductDTO productDTO){
+    public ResponseEntity<ProductDTO> update(@Valid @PathVariable Long id, @RequestBody ProductDTO productDTO){
         productDTO = productService.update(id,productDTO);
         return ResponseEntity.ok().body(productDTO);
     }
