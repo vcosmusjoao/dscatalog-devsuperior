@@ -1,4 +1,4 @@
-package com.devsuperior.dscatalog.config;
+package com.devsuperior.dscatalog.entities.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
