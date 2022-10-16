@@ -1,4 +1,4 @@
-package com.devsuperior.dscatalog.components;
+package com.devsuperior.dscatalog.dto.components;
 
 import com.devsuperior.dscatalog.entities.User;
 import com.devsuperior.dscatalog.repositories.UserRepository;

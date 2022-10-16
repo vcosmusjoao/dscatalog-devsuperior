@@ -54,10 +54,8 @@ public class UserService implements UserDetailsService {
         User user = userRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("ID Não Encontrado"));
-
         UserDTO UserDTO = new UserDTO(user);
         return UserDTO;
-
     }
 
     @Transactional

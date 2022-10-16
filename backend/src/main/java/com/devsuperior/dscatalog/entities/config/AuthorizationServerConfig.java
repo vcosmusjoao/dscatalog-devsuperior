@@ -1,6 +1,6 @@
 package com.devsuperior.dscatalog.entities.config;
 
-import com.devsuperior.dscatalog.components.JwtTokenEnhancer;
+import com.devsuperior.dscatalog.dto.components.JwtTokenEnhancer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
